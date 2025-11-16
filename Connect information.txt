@@ -1,0 +1,92 @@
+1️⃣ ESP32 → Flask：回報狀態
+
+ESP32 送出：
+
+POST /update
+
+✔ Body JSON：
+{
+  "robot_id": 1,
+  "x": 10,
+  "y": 5,
+  "status": "moving",
+  "battery": 88
+}
+
+2️⃣ Flask → ESP32
+
+ESP32 
+
+GET /task/1
+
+✔ Flask 回應 JSON：
+
+有任務：
+
+{
+  "task_id": 12,
+  "target_x": 30,
+  "target_y": 7
+}
+
+
+無任務：
+
+{
+  "task_id": -1
+}
+
+3️⃣ ESP32 → Flask
+POST /done
+
+
+JSON
+
+{
+  "robot_id": 1,
+  "task_id": 12
+}
+
+4️⃣ ESP32 → Flask
+POST /alert
+
+
+JSON
+
+{
+  "robot_id": 2,
+  "alert": "obstacle"
+}
+
+5️⃣ Flask → ESP32
+
+
+
+{
+  "action": "wait",
+  "wait_time": 1.5
+}
+
+
+{
+  "action": "reroute",
+  "new_path": [[10,5],[10,6],[11,6]]
+}
+
+-------------------------------------------------------------------------------------
+
+🎯 三、MySQL 資料表格式
+📌 robots（車子狀態）
+欄位	型態		說明
+id	INT		車 ID
+x	INT		目前位置 X
+y	INT		目前位置 Y
+status	VARCHAR		moving / idle / charging
+battery	INT		電量
+📌 tasks（任務表）
+欄位		型態		說明
+id		INT		任務 ID
+target_x	INT		任務坐標
+target_y	INT		任務坐標
+assigned	INT		指派給哪台車（0 表未指派）
+done		TINYINT		是否完成
